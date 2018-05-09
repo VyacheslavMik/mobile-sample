@@ -1,14 +1,22 @@
-# mobile-sample
+## Run app
 
-A Clojure library designed to ... well, that part is up to you.
+### Install dependencies
 
-## Usage
+```
+npm install
+```
 
-FIXME
+### Run ios application
+```
+re-natal use-ios-device simulator
+re-natal use-figwheel
+react-native start
+react-native run-ios
+```
 
-## License
+### Run clojurescript project
 
-Copyright © 2018 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Run clojure repl and in it type this
+```
+(start-figwheel "ios")
+```
