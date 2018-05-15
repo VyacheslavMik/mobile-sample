@@ -62,3 +62,7 @@ target/
 # Figwheel
 #
 figwheel_server.log
+
+# lein
+.lein-repl-history
+.nrepl-port

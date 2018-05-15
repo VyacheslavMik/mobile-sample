@@ -157,20 +157,15 @@
 (defn path-only [path-with-query]
   (first (str/split path-with-query #"\?")))
 
-#_(defn default-tabs [db]
-  (let [curr-path (path-only (get-in db [:route :path]))
-        profile (u/current-profile db)]
-    (->> [{:path (u/acc-href profile {:show :all})
+(defn default-tabs [db]
+  (let [curr-path (path-only (get-in db [:route :path]))]
+    (->> [{:path "/page1"
            :icon (:feed nb/icons)
            :icon-active (:feed-active nb/icons)}
-          {:path (u/acc-href profile :chat-list)
+          {:path "/page2"
            :icon (:chat nb/icons)
            :icon-active (:chat-active nb/icons)}
-          (when (= (:group profile) "patient")
-            {:path (u/acc-href profile :medcard)
-             :icon (:medcard nb/icons)
-             :icon-active (:medcard-active nb/icons)})
-          {:path (u/acc-href profile :settings)
+          {:path "/page3"
            :icon (:nav nb/icons)
            :icon-active (:nav-active nb/icons)}]
          (remove nil?)

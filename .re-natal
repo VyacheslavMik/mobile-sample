@@ -6,7 +6,8 @@
     "prod": "env/prod"
   },
   "modules": [
-    "native-base"
+    "native-base",
+    "./native-base-theme/components"
   ],
   "imageDirs": [
     "images"
