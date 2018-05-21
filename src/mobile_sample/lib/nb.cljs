@@ -1,7 +1,7 @@
 (ns mobile-sample.lib.nb
   (:require [reagent.core :as r]))
 
-#_(def get-theme (aget (js/require "./native-base-theme/components") "default"))
+(def get-theme (aget (js/require "./native-base-theme/components") "default"))
 ;; NativeBase component
 (def NativeBase (js/require "native-base"))
 ;; Layout
@@ -57,3 +57,22 @@
 (def icon (r/adapt-react-class (.-Icon NativeBase)))
 (def picker (r/adapt-react-class (.-Picker NativeBase)))
 (def picker-item (r/adapt-react-class (.. NativeBase -Picker -Item)))
+
+(def icons {:feed (js/require "./images/tn_icons/feed-inactive.png")
+            :feed-active (js/require "./images/tn_icons/feed-active.png")
+            :chat (js/require "./images/tn_icons/chats-inactive.png")
+            :chat-active (js/require "./images/tn_icons/chats-active.png")
+            :medcard (js/require "./images/tn_icons/medcard-inactive.png")
+            :medcard-active (js/require "./images/tn_icons/medcard-active.png")
+            :nav (js/require "./images/tn_icons/nav-inactive.png")
+            :nav-active (js/require "./images/tn_icons/nav-active.png")})
+
+;; Icons
+(def material-icon* (r/adapt-react-class (aget (js/require "react-native-vector-icons/MaterialIcons") "default")))
+(def material-community-icon* (r/adapt-react-class (aget (js/require "react-native-vector-icons/MaterialCommunityIcons") "default")))
+
+(defn material-icon [props]
+  (let [props* (dissoc props :package)]
+    (if (= (:package props) :community)
+      [material-community-icon* props*]
+      [material-icon* props*])))

@@ -6,6 +6,9 @@
             [mobile-sample.nav]
             [mobile-sample.pages :as pages]
             [mobile-sample.pages.sample.core]
+            [mobile-sample.pages.chat.core]
+            [mobile-sample.pages.feed.core]
+            [mobile-sample.pages.nav.core]
             [mobile-sample.lib.nb :as nb]
             [mobile-sample.lib.rn :as rn]
             [mobile-sample.layout :as l]
@@ -67,7 +70,7 @@
   (let [route (rf/subscribe [:route])]
     (fn []
       (when @route
-        [nb/style-provider #_{:style (nb/get-theme)}
+        [nb/style-provider {:style (nb/get-theme)}
          [nb/view {:style {:flex 1
                            :flex-direction :column
                            :padding-top 10}}

@@ -36,15 +36,15 @@
                  :style {:padding 12}
                  :on-press (fn [_]
                              (rf/dispatch [:go-back]))}
-      [nb/text "<"]
-      #_[nb/material-icon {:name "arrow-back"
+      #_[nb/text "<"]
+      [nb/material-icon {:name "arrow-back"
                          :style {:font-size 22
                                  :color "#00a984"}}]]]))
 
 (defn header-right [{{prev :prev} :nav right :right :as props}]
   [nb/view {:style {:flex 0
                     :flex-direction "row"}}
-   #_(when (and (not prev) (not right))
+   (when (and (not prev) (not right))
      [nb/button {:transparent true
                  :style {:padding 12}}
       [nb/material-icon {:name "search"
@@ -60,8 +60,8 @@
                       :on-press #(if (:path btn)
                                    (rf/dispatch [:navigate (:path btn)])
                                    ((:fn btn) props))}
-           [nb/text "Icon"]
-           #_[nb/material-icon {:name (:icon btn)
+           #_[nb/text "Icon"]
+           [nb/material-icon {:name (:icon btn)
                               :style {:font-size 22
                                       :color "#00a984"}}]]))))])
 
@@ -138,8 +138,8 @@
            [(:left props) props]
            (when (get-in props [:nav :prev])
              [nb/button {:transparent true}
-              [nb/text "<"]
-              #_[nb/material-icon {:name "arrow-back"
+              #_[nb/text "<"]
+              [nb/material-icon {:name "arrow-back"
                                  :style {:font-size 22
                                          :color "#00a984"}}]])))]
       [nb/body
@@ -157,20 +157,15 @@
 (defn path-only [path-with-query]
   (first (str/split path-with-query #"\?")))
 
-#_(defn default-tabs [db]
-  (let [curr-path (path-only (get-in db [:route :path]))
-        profile (u/current-profile db)]
-    (->> [{:path (u/acc-href profile {:show :all})
+(defn default-tabs [db]
+  (let [curr-path (path-only (get-in db [:route :path]))]
+    (->> [{:path "/feed"
            :icon (:feed nb/icons)
            :icon-active (:feed-active nb/icons)}
-          {:path (u/acc-href profile :chat-list)
+          {:path "/chat"
            :icon (:chat nb/icons)
            :icon-active (:chat-active nb/icons)}
-          (when (= (:group profile) "patient")
-            {:path (u/acc-href profile :medcard)
-             :icon (:medcard nb/icons)
-             :icon-active (:medcard-active nb/icons)})
-          {:path (u/acc-href profile :settings)
+          {:path "/nav"
            :icon (:nav nb/icons)
            :icon-active (:nav-active nb/icons)}]
          (remove nil?)

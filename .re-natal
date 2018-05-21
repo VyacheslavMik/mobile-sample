@@ -6,7 +6,11 @@
     "prod": "env/prod"
   },
   "modules": [
-    "native-base"
+    "native-base",
+    "./native-base-theme/components",
+    "react-native-vector-icons",
+    "react-native-vector-icons/MaterialCommunityIcons",
+    "react-native-vector-icons/MaterialIcons"
   ],
   "imageDirs": [
     "images"
