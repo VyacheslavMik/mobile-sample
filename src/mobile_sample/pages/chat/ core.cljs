@@ -8,8 +8,7 @@
 
 (defn chat []
   (let [{:keys [chat-text]} @(rf/subscribe [:chat/index])]
-    [l/layout {}
-      [nb/view {:style {:padding-top 20}}
-        [nb/text chat-text]]]))
+    [nb/view {:style {:padding-top 20}}
+      [nb/text chat-text]]))
 
 (pages/reg-page :chat/index chat)

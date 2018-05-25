@@ -6,8 +6,9 @@
             [re-frame.core :as rf]))
 
 (defn feed []
-  (let [{:keys [feed-text]} @(rf/subscribe [:feed/index])]
-    [l/layout {}
+  (let [{:keys [feed-text]} @(rf/subscribe [:feed/index])
+        top-tabs {:top-tabs [{:text "tab1"} {:text "tab2"}]}]
+    [l/layout-top-tabs top-tabs
       [nb/view {:style {:padding-top 20}}
         [nb/text feed-text]]]))
 
