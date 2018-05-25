@@ -60,10 +60,13 @@
     (:path route)]])
 
 (defn content [route]
+  (println "Content called with route: " route)
+  (println "Route match: " (:match route))
   (let [c (get @pages/pages (:match route))]
     [nb/view {:style {:flex 1}}
      (if c
-       [c]
+       [l/layout-tabs {:tabs (l/default-tabs {:route route})}
+         [c]]
        [not-found @route])]))
 
 (defn app-root []
@@ -73,7 +76,7 @@
         [nb/style-provider {:style (nb/get-theme)}
          [nb/view {:style {:flex 1
                            :flex-direction :column
-                           :padding-top 10}}
+                           }}
           [content @route]
           [debug-footer @route]]]))))
 
