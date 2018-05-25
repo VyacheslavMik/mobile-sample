@@ -126,6 +126,16 @@
           (when (:text tab)
             [nb/text (:text tab)])]])]]])
 
+(defn layout-top-tabs [props & body]
+  [nb/container 
+    ;[header-component props]
+    [nb/tabs {:initial-page 0}
+      (for [tab (:top-tabs props)]
+        ^{:key (pr-str tab)}
+        [nb/tab {:heading (:text tab)}
+          [nb/view
+            [nb/text (:text tab)]]])]])
+
 
 (defn layout [props & body]
   [nb/container
@@ -159,6 +169,7 @@
 
 (defn default-tabs [db]
   (let [curr-path (path-only (get-in db [:route :path]))]
+    (println "default-tabs curr-path: " curr-path)
     (->> [{:path "/feed"
            :icon (:feed nb/icons)
            :icon-active (:feed-active nb/icons)}
