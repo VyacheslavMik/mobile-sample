@@ -67,11 +67,13 @@
 (rf/reg-event-fx
  ::location-changed
  (fn [{db :db} [_ path]]
-   (println "location-changed" path)
+   (println "[location-changed] path: " path)
+   (println "[location-changed] db: " db)
    (let [[location query] (str/split path #"[?]")
          query (if query (parse-querystring query) query)
          location (str/replace location  #"^.*://" "/")
          match (rm/match location routes/routes)
+         layout (some identity (map :layout (reverse (:parents match))))
          prev-route (:route db)
 
          new-contexts (reduce (fn [acc {c-params :params ctx :context}]
@@ -82,7 +84,10 @@
 
          ctx-diff (contexts-diff match old-contexts new-contexts)
 
-         route (merge-with merge match {:query query :path path :contexts new-contexts})
+         route (merge-with merge match {:query query 
+                                        :path path 
+                                        :contexts new-contexts 
+                                        :layout layout})
 
          to-dispatch (into ctx-diff
                            (cond
@@ -112,33 +117,6 @@
        {:db (assoc db :route {:match :not-found :path path})}
        {:db (assoc db :route route)
         :dispatch-n to-dispatch}))))
-
-;; (rf/reg-event-fx
-;;  ::location-changed
-;;  (fn [{db :db} [_ path]]
-;;    (let [[location query] (str/split path #"[?]")
-;;          query (if query (parse-querystring query) query)
-;;          location (str/replace location  #"^.*://" "/")
-;;          match (rm/match location routes/routes)
-;;          route (merge-with merge match {:query query :path path})
-;;          prev-route (:route db)
-;;          to-dispatch (cond-> []
-;;                        (and prev-route
-;;                             (not (= (:match prev-route)
-;;                                     (:match route))))
-;;                        (conj [(:match prev-route) :deinit prev-route]
-;;                              [(:match route) :init route])
-
-;;                        route
-;;                        (conj [(:match route) :init route]))
-;;          route (if (not match) {:match :not-found :path path} route)
-;;          db (cond-> (assoc db :route route)
-;;               prev-route (update :history cons prev-route))]
-;;      (println "history" (:history db))
-;;      (println "route" route)
-;;      (println "prev-route" prev-route)
-;;      (cond-> {:db db}
-;;        match (assoc :dispatch-n to-dispatch)))))
 
 (rf/reg-event-fx
  ::go-back
