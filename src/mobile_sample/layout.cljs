@@ -5,6 +5,13 @@
             [re-frame.core :as rf]
             [clojure.string :as str]))
 
+(defonce layouts (atom {}))
+
+(defn reg-layout
+  "register page under keyword for routing"
+  [key f & [layout-key]]
+  (swap! layouts assoc key f))            
+
 (def stylesheet (js->clj (aget (js/require "react-native") "StyleSheet") :keywordize-keys true))
 (def appbar-height (if rn/is-ios 44 56))
 (def statusbar-height (if rn/is-ios 20 0))
@@ -98,9 +105,31 @@
            {:on-press (fn [_] (rf/dispatch [:navigate (:href params)]))})]
    body))
 
-(defn layout-tabs [props & body]
+
+(defn path-only [path-with-query]
+  (first (str/split path-with-query #"\?")))
+
+(defn default-tabs [route]
+  (let [curr-path (path-only (:path route))]
+    (println "default-tabs curr-path: " curr-path)
+    (->> [{:path "/feed"
+           :icon (:feed nb/icons)
+           :icon-active (:feed-active nb/icons)}
+          {:path "/chat"
+           :icon (:chat nb/icons)
+           :icon-active (:chat-active nb/icons)}
+          {:path "/nav"
+           :icon (:nav nb/icons)
+           :icon-active (:nav-active nb/icons)}]
+         (remove nil?)
+         (map (fn [tab]
+                (assoc tab :active? (= (path-only (:path tab)) curr-path)))))))
+
+(defn layout-tabs [& body]
+ (let [route (rf/subscribe [:route])
+       tabs (default-tabs @route)]
   [nb/container
-   [header-component props]
+   [header-component {}]
    [nb/content
     (map-indexed
      (fn [idx i]
@@ -109,7 +138,7 @@
      body)]
    [nb/footer
     [nb/footer-tab
-     (for [tab (:tabs props)]
+     (for [tab tabs]
        ^{:key (pr-str tab)}
         [nb/button
          [a {:href (:path tab)}
@@ -124,7 +153,9 @@
                                   (:icon-active tab)
                                   (:icon tab))}]])
           (when (:text tab)
-            [nb/text (:text tab)])]])]]])
+            [nb/text (:text tab)])]])]]]))
+
+(reg-layout :bottom-tabs layout-tabs)          
 
 (defn layout-top-tabs [props & body]
   [nb/container 
@@ -137,26 +168,18 @@
             [nb/text (:text tab)]]])]])
 
 
-(defn layout [props & body]
+(defn layout [& body]
   [nb/container
-   (if-let [pheader (:header props)]
-     pheader
      [nb/header
       [nb/left
-       (when-not (= (:left props) false)
-         (if (:left props)
-           [(:left props) props]
-           (when (get-in props [:nav :prev])
-             [nb/button {:transparent true}
-              #_[nb/text "<"]
+       [nb/button {:transparent true}
               [nb/material-icon {:name "arrow-back"
                                  :style {:font-size 22
-                                         :color "#00a984"}}]])))]
+                                         :color "#00a984"}}]]]
       [nb/body
        [nb/title
-        (or (:title props) "Page")]]
-      [nb/right
-       (when (:right props) [(:right props) props])]])
+        "Page"]]
+      [nb/right]]
    [nb/content
     (map-indexed
      (fn [idx i]
@@ -164,21 +187,4 @@
        [nb/view i])
      body)]])
 
-(defn path-only [path-with-query]
-  (first (str/split path-with-query #"\?")))
-
-(defn default-tabs [db]
-  (let [curr-path (path-only (get-in db [:route :path]))]
-    (println "default-tabs curr-path: " curr-path)
-    (->> [{:path "/feed"
-           :icon (:feed nb/icons)
-           :icon-active (:feed-active nb/icons)}
-          {:path "/chat"
-           :icon (:chat nb/icons)
-           :icon-active (:chat-active nb/icons)}
-          {:path "/nav"
-           :icon (:nav nb/icons)
-           :icon-active (:nav-active nb/icons)}]
-         (remove nil?)
-         (map (fn [tab]
-                (assoc tab :active? (= (path-only (:path tab)) curr-path)))))))
+(reg-layout :simple layout)
