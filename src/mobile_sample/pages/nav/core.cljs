@@ -7,9 +7,8 @@
 
 (defn nav []
   (let [{:keys [nav-text]} @(rf/subscribe [:nav/index])]
-    [l/layout {}
-      [nb/view {:style {:padding-top 20}}
-        [nb/text nav-text]]]))
+    [nb/view {:style {:padding-top 20}}
+      [nb/text nav-text]]))
 
 
 (pages/reg-page :nav/index nav)

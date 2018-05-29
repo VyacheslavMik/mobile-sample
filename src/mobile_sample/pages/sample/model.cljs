@@ -7,9 +7,13 @@
  (fn [{db :db} [_ phase route]]
    (cond
      (= :init phase)
-     (let [tabs (l/default-tabs db)]
-       {:db (assoc db :sample/index {:tabs tabs
-                                     :sample-text "This is a sample text"})})
+     (do 
+       (println "[:sample/index] init db " db)
+       (println "[:sample/index] init db at key db " {db :db})
+       (let [tabs (l/default-tabs db)]
+         {:db (assoc db :sample/index {:tabs tabs
+                                       :sample-text "This is a sample text"})}))
+     
 
      (= :deinit phase)
      {})))
