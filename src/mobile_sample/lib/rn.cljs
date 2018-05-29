@@ -24,6 +24,9 @@
 (def view (r/adapt-react-class (.-View react-native)))
 (def activity-indicator (r/adapt-react-class (.-ActivityIndicator react-native)))
 (def text-input (r/adapt-react-class (.-TextInput react-native)))
+(def flat-list (r/adapt-react-class (.-FlatList react-native)))
 
 (defn register [nm cmp]
   (.registerComponent app-registry nm #(r/reactify-component cmp)))
+
+
