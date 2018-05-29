@@ -62,10 +62,11 @@
 (defn content [route]
   (println "Content called with route: " route)
   (println "Route match: " (:match route))
-  (let [c (get @pages/pages (:match route))]
+  (let [c (get @pages/pages (:match route))
+        layout (get @l/layouts (:layout route))]
     [nb/view {:style {:flex 1}}
      (if c
-       [l/layout-tabs {:tabs (l/default-tabs {:route route})}
+       [layout
          [c]]
        [not-found @route])]))
 
@@ -91,7 +92,7 @@
  ::init
  (fn [{db :db} [_ auth]]
    {:db (assoc db :auth auth)
-      :navigate "/"}))
+      :navigate "/feed"}))
 
 (defn init []
   (rf/dispatch-sync [:core-init])
