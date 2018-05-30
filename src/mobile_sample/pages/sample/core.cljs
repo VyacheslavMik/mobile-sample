@@ -7,8 +7,11 @@
             [re-frame.core :as rf]))
 
 (defn sample []
-  (let [{:keys [sample-text tabs]} @(rf/subscribe [:sample/index])]
-    [l/layout-tabs {:tabs tabs}
+  (let [db @(rf/subscribe [:sample/index])
+        {:keys [sample-text tabs]} db]
+    (println "[sample] db " db)
+    [nb/text sample-text]
+    #_[l/layout-tabs {:tabs (l/default-tabs db)}
      [nb/view {:style {:padding-top 20}}
       [nb/text sample-text]]]))
 
